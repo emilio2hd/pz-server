@@ -1,6 +1,7 @@
 pzuser_home: /home/pzuser
 
 zomboid_servername: "servertest"
+# zomboid_server_password: "somepass"
 zomboid_server_admin_password: "somepass"
 
 pzserver_backup_repo_password: "somepass"

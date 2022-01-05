@@ -29,3 +29,6 @@
       tags: [ never, migrate-files ]
     - include: tasks/04-set-backups.yml
       tags: [ backups ]
+    - include: tasks/05-set-server-password.yml
+      when: zomboid_server_password is defined
+      tags: [ server-pwd ]
