@@ -25,3 +25,5 @@
       tags: [ directories ]
     - include: tasks/02-install-steamcmd.yml
       tags: [ steamcmd ]
+    - include: tasks/03-migrate-files.yml
+      tags: [ never, migrate-files ]

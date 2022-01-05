@@ -1,0 +1,46 @@
+- name: Remove files of directories
+  file:
+    state: absent
+    path: "{{item}}"
+  with_items:
+    - "{{zomboid_dir}}/Server"
+    - "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}"
+
+- name: Create Zomboid directory
+  become: yes
+  become_method: su
+  become_user: pzuser
+  file:
+    path: "{{zomboid_dir}}{{item}}"
+    state: directory
+  with_items:
+    - '/' # root folder
+    - "/Saves/Multiplayer/{{zomboid_servername}}"
+    - '/Server'
+
+- name: Copying pz files
+  become: yes
+  become_method: su
+  become_user: pzuser
+  ansible.builtin.copy:
+    force: yes
+    src: "{{ item.from }}"
+    dest: "{{zomboid_dir}}/{{ item.to }}"
+  with_items:
+    - { from: "server/{{zomboid_servername}}.ini", to: "Server/{{zomboid_servername}}.ini" }
+    - { from: "server/{{zomboid_servername}}_SandboxVars.lua", to: "Server/{{zomboid_servername}}_SandboxVars.lua" }
+    - { from: "server/{{zomboid_servername}}_spawnregions.lua", to: "Server/{{zomboid_servername}}_spawnregions.lua" }
+    - { from: "saves/{{zomboid_servername}}.tar.gz", to: "Saves/Multiplayer/{{zomboid_servername}}/{{zomboid_servername}}.tar.gz" }
+
+- name: Extract zomboid save file
+  become: yes
+  become_method: su
+  become_user: pzuser
+  command: "tar -zxf {{zomboid_servername}}.tar.gz"
+  args:
+    chdir: "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}"
+
+- name: Remove compacted save files
+  file:
+    path: "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}/{{zomboid_servername}}.tar.gz"
+    state: absent
