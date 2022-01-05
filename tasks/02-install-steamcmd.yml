@@ -1,0 +1,31 @@
+- name: Install software properties common
+  apt:
+    name: ['software-properties-common', 'screen']
+
+- name: Add multiverse repository
+  command: add-apt-repository multiverse
+
+- name: Install | Add i386 architecture
+  command: dpkg --add-architecture i386
+
+- name: Install | Update apt cache for i386
+  apt:
+    update_cache: true
+
+- name: Install | (lib32) Packages
+  apt:
+    name: lib32gcc1
+
+- name: Install SteamCMD
+  apt:
+    name: steamcmd
+
+- name: Install zomboid dedicated server via SteamCMD
+  become: yes
+  become_method: su
+  become_user: pzuser
+  command: "steamcmd +login anonymous +force_install_dir {{zomboid_server_dir}} +app_update 380870 validate +quit"
+  register: zomboid_install
+
+- name: Print zomboid install result
+  debug: var=zomboid_install.stdout_lines

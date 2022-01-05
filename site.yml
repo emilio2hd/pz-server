@@ -23,3 +23,5 @@
   tasks:
     - include: tasks/01-create-directories.yml
       tags: [ directories ]
+    - include: tasks/02-install-steamcmd.yml
+      tags: [ steamcmd ]
