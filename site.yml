@@ -1,0 +1,25 @@
+---
+
+- name: Set up PZ server
+  hosts: pzserver
+  gather_facts: no
+
+  vars_files:
+    - default.config.yml
+
+  vars:
+    pzuser_bin_dir: "{{pzuser_home}}/.local/bin"
+    pz_server_dir: "{{pzuser_home}}/pz-server"
+    zomboid_dir: "{{pz_server_dir}}/Zomboid"
+    zomboid_server_dir: "{{pz_server_dir}}/server"
+
+  pre_tasks:
+    - name: Include playbook custom configuration.
+      include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ['always']
+
+  tasks:
+    - include: tasks/01-create-directories.yml
+      tags: [ directories ]

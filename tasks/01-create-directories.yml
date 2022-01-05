@@ -1,0 +1,53 @@
+- name: Create ~/.local/bin
+  become: yes
+  become_method: su
+  become_user: pzuser
+  file:
+    path: "{{pzuser_home}}/.local/bin"
+    state: directory
+
+- name: "Create Zomboid directories in {{pz_server_dir}}"
+  become: yes
+  become_method: su
+  become_user: pzuser
+  file:
+    path: "{{pz_server_dir}}{{item}}"
+    state: directory
+  with_items:
+    - '/' # root folder
+    - '/server'
+    - '/bin'
+    - '/logs'
+    - '/backups'
+
+- name: Setting server binaries from templates
+  become: yes
+  become_method: su
+  become_user: pzuser
+  template:
+    src: "{{ item.from }}"
+    dest: "{{pz_server_dir}}/bin/{{ item.to }}"
+  with_items:
+    - { from: 'bin/start-zomboid.j2', to: 'start-zomboid' }
+    - { from: 'bin/stop-zomboid.j2', to: 'stop-zomboid' }
+    - { from: 'bin/backup-pz-server.j2', to: 'backup-pz-server' }
+
+- name: Changing permission of binary files to be executables
+  file: dest="{{pz_server_dir}}/bin/{{item}}" mode=a+x
+  with_items:
+    - start-zomboid
+    - stop-zomboid
+    - backup-pz-server
+
+- name: Create server binary files symbolic links to ~/.local/bin
+  become: yes
+  become_method: su
+  become_user: pzuser
+  file:
+    src: "{{pz_server_dir}}/bin/{{item}}"
+    dest: "{{pzuser_bin_dir}}/{{item}}"
+    state: link
+  with_items:
+    - start-zomboid
+    - stop-zomboid
+    - backup-pz-server

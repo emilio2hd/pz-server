@@ -1,0 +1,11 @@
+#!/bin/bash
+
+printf "Starting PZ Server...\n"
+
+{% set pz_start_str = zomboid_server_dir + "/start-server.sh -Duser.home=" + pz_server_dir + ' -- ' %}
+{% set pz_start_str = pz_start_str + "-servername " + zomboid_servername + ' ' %}
+{% set pz_start_str = pz_start_str + "-adminpassword " + zomboid_server_admin_password %}
+
+screen -d -m -S zomboid bash -c "{{pz_start_str}}"
+
+printf "Server is starting, it cabe take some time.\n"

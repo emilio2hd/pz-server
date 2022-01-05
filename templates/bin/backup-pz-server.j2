@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source {{pz_server_dir}}/backups/restic-env
+source {{pzuser_home}}/.profile
+
+printf "Starting backup...\n\n"
+
+stop-zomboid
+sleep 10m
+
+restic backup {{zomboid_dir}}/db
+restic backup {{zomboid_dir}}/Server
+restic backup {{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}
+
+printf "\n...backup done.\n"
+start-zomboid
