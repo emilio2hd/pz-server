@@ -1,7 +1,7 @@
 pzuser_home: /home/pzuser
 
 zomboid_servername: "servertest"
-# zomboid_server_password: "somepass"
+# zomboid_server_password: "somepass" # Uncomment or add this variable to config.yml file to set a server password
 zomboid_server_admin_password: "somepass"
 
 pzserver_backup_repo_password: "somepass"

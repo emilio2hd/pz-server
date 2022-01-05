@@ -1,0 +1,2 @@
+[pzserver]
+<server ip>     ansible_connection=ssh
