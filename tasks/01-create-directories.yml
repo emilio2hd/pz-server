@@ -20,6 +20,15 @@
     - '/logs'
     - '/backups'
 
+- set_fact:
+    binary_templates_list:
+      - { from: 'bin/start-zomboid.j2', to: 'start-zomboid' }
+      - { from: 'bin/stop-zomboid.j2', to: 'stop-zomboid' }
+      - { from: 'bin/backup-pz-server.j2', to: 'backup-pz-server' }
+
+- set_fact:
+    binary_files_list: "{{ binary_templates_list | map(attribute='to') }}"
+
 - name: Setting server binaries from templates
   become: yes
   become_method: su
@@ -27,17 +36,11 @@
   template:
     src: "{{ item.from }}"
     dest: "{{pz_server_dir}}/bin/{{ item.to }}"
-  with_items:
-    - { from: 'bin/start-zomboid.j2', to: 'start-zomboid' }
-    - { from: 'bin/stop-zomboid.j2', to: 'stop-zomboid' }
-    - { from: 'bin/backup-pz-server.j2', to: 'backup-pz-server' }
+  with_items: "{{ binary_templates_list }}"
 
 - name: Changing permission of binary files to be executables
   file: dest="{{pz_server_dir}}/bin/{{item}}" mode=a+x
-  with_items:
-    - start-zomboid
-    - stop-zomboid
-    - backup-pz-server
+  with_items: "{{ binary_files_list }}"
 
 - name: Create server binary files symbolic links to ~/.local/bin
   become: yes
@@ -47,7 +50,4 @@
     src: "{{pz_server_dir}}/bin/{{item}}"
     dest: "{{pzuser_bin_dir}}/{{item}}"
     state: link
-  with_items:
-    - start-zomboid
-    - stop-zomboid
-    - backup-pz-server
+  with_items: "{{ binary_files_list }}"
