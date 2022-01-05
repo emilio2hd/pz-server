@@ -27,3 +27,5 @@
       tags: [ steamcmd ]
     - include: tasks/03-migrate-files.yml
       tags: [ never, migrate-files ]
+    - include: tasks/04-set-backups.yml
+      tags: [ backups ]

@@ -1,0 +1,50 @@
+- name: Install restic backup tool
+  apt:
+    name: 'restic'
+
+- name: Create restic-env
+  become: yes
+  become_method: su
+  become_user: pzuser
+  ansible.builtin.copy:
+    dest: "{{ pz_server_dir }}/backups/restic-env"
+    content: |
+      export RESTIC_REPOSITORY="{{ pz_server_dir }}/backups/repository"
+      export RESTIC_PASSWORD="{{pzserver_backup_repo_password}}"
+
+- name: Check if backup repository is already initialized
+  become: yes
+  become_method: su
+  become_user: pzuser
+  register: check_backup_repo
+  shell: |
+    source {{ pz_server_dir }}/backups/restic-env
+    if /usr/bin/restic cat config >/dev/null 2>&1; then
+      echo initialized
+    else
+      echo 'not initialized'
+    fi
+  args:
+    executable: /bin/bash
+
+- name: Initialize backup repository
+  become: yes
+  become_method: su
+  become_user: pzuser
+  shell: "source {{ pz_server_dir }}/backups/restic-env && /usr/bin/restic init"
+  args:
+    executable: /bin/bash
+  when: check_backup_repo.stdout.strip() == "not initialized"
+
+- set_fact:
+    default_cron_params:
+      name: "Backup zomboid server files"
+      user: pzuser
+      job: "{{pzuser_bin_dir}}/backup-pz-server > {{pz_server_dir}}/logs/backup.`date +\\%Y\\%m\\%d\\%H\\%M\\%S`.log 2>&1"
+      state: present
+
+- name: Set recurrent backup
+  become: yes
+  become_method: su
+  become_user: pzuser
+  cron: "{{ default_cron_params|combine(backup_cron_settings) }}"

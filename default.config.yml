@@ -1,3 +1,10 @@
 pzuser_home: /home/pzuser
+
 zomboid_servername: "servertest"
 zomboid_server_admin_password: "somepass"
+
+pzserver_backup_repo_password: "somepass"
+backup_cron_settings:
+  minute: "0"
+  hour: "0"
+  weekday: 1-5
