@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source {{pzuser_home}}/.profile
+
+# Update server
+/usr/games/steamcmd +force_install_dir {{zomboid_server_dir}} +login anonymous +app_update 380870 validate +quit
+
+start-zomboid

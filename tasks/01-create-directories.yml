@@ -25,6 +25,7 @@
       - { from: 'bin/start-zomboid.j2', to: 'start-zomboid' }
       - { from: 'bin/stop-zomboid.j2', to: 'stop-zomboid' }
       - { from: 'bin/backup-pz-server.j2', to: 'backup-pz-server' }
+      - { from: 'bin/on-server-startup.j2', to: 'on-server-startup' }
 
 - set_fact:
     binary_files_list: "{{ binary_templates_list | map(attribute='to') }}"
@@ -51,3 +52,13 @@
     dest: "{{pzuser_bin_dir}}/{{item}}"
     state: link
   with_items: "{{ binary_files_list }}"
+
+- name: Set script to run on startup
+  become: yes
+  become_method: su
+  become_user: pzuser
+  ansible.builtin.cron:
+    name: "PZ startup script"
+    special_time: reboot
+    user: pzuser
+    job: "{{pzuser_bin_dir}}/on-server-startup > {{pz_server_dir}}/logs/startup.`date +\\%Y\\%m\\%d\\%H\\%M\\%S`.log 2>&1"
