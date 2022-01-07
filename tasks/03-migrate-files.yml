@@ -18,19 +18,25 @@
     - "/Saves/Multiplayer/{{zomboid_servername}}"
     - '/Server'
 
-- name: Copying pz files
+- name: Copying pz server files
   become: yes
   become_method: su
   become_user: pzuser
   ansible.builtin.copy:
     force: yes
-    src: "{{ item.from }}"
-    dest: "{{zomboid_dir}}/{{ item.to }}"
-  with_items:
-    - { from: "server/{{zomboid_servername}}.ini", to: "Server/{{zomboid_servername}}.ini" }
-    - { from: "server/{{zomboid_servername}}_SandboxVars.lua", to: "Server/{{zomboid_servername}}_SandboxVars.lua" }
-    - { from: "server/{{zomboid_servername}}_spawnregions.lua", to: "Server/{{zomboid_servername}}_spawnregions.lua" }
-    - { from: "saves/{{zomboid_servername}}.tar.gz", to: "Saves/Multiplayer/{{zomboid_servername}}/{{zomboid_servername}}.tar.gz" }
+    src: "{{ item }}"
+    dest: "{{zomboid_dir}}/Server/{{ item | basename }}"
+  with_fileglob:
+    - "files/server/*"
+
+- name: Copying pz save files
+  become: yes
+  become_method: su
+  become_user: pzuser
+  ansible.builtin.copy:
+    force: yes
+    src: "saves/{{zomboid_servername}}.tar.gz"
+    dest: "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}/{{zomboid_servername}}.tar.gz"
 
 - name: Extract zomboid save file
   become: yes
