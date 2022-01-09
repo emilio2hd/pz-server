@@ -3,7 +3,7 @@ An ansible playbook to set up a [Project Zomboid](https://store.steampowered.com
 
 This playbook was created base on:
 - Ubuntu 20-04
-- Scaleway instance
+- Scaleway instance (DEV1-M: 3 vCPUs; 4 GB RAM; 40 GB SSD)
 - Ansible 2.10.9
 - Python 3.9
 - MacOS/Linux local machine
@@ -44,7 +44,7 @@ In order to not have your server killing processes due to lack of memory, create
 
 ```
 # Create and use swap file
-sudo fallocate -l 2G /swapfile
+sudo fallocate -l 4G /swapfile
 ls -lh /swapfile
 sudo chmod 600 /swapfile
 ls -lh /swapfile
@@ -115,7 +115,7 @@ cd ~                            # Should lead you to /home/pzuser
 source .profile                 # Load the scripts in /home/pzuser/.local/bin
 start-zomboid && screen -r      # Run the server and display the logs
 ```
-You should se the dedicated server initializing and printing the logs. Once you see:
+You should see the dedicated server initializing and printing the logs. Once you see:
 ```
 LOG  : General blahblah ######
 Server Steam ID <bunch of numbers>
