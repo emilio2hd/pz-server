@@ -177,7 +177,7 @@ Run the server again and create the user with the same name as the old server an
 Have fun!
 
 # Links
-https://linuxize.com/post/how-to-use-linux-screen/
-https://www.digitalocean.com/community/tutorials/how-to-back-up-data-to-an-object-storage-service-with-the-restic-backup-client
-https://pzwiki.net/wiki/Startup_parameters
-https://pzwiki.net/wiki/Dedicated_Server
+- https://linuxize.com/post/how-to-use-linux-screen/
+- https://www.digitalocean.com/community/tutorials/how-to-back-up-data-to-an-object-storage-service-with-the-restic-backup-client
+- https://pzwiki.net/wiki/Startup_parameters
+- https://pzwiki.net/wiki/Dedicated_Server
