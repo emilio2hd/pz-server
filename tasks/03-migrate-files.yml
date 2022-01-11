@@ -7,9 +7,6 @@
     - "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}"
 
 - name: Create Zomboid directory
-  become: yes
-  become_method: su
-  become_user: pzuser
   file:
     path: "{{zomboid_dir}}{{item}}"
     state: directory
@@ -19,9 +16,6 @@
     - '/Server'
 
 - name: Copying pz server files
-  become: yes
-  become_method: su
-  become_user: pzuser
   ansible.builtin.copy:
     force: yes
     src: "{{ item }}"
@@ -30,18 +24,12 @@
     - "files/server/*"
 
 - name: Copying pz save files
-  become: yes
-  become_method: su
-  become_user: pzuser
   ansible.builtin.copy:
     force: yes
     src: "saves/{{zomboid_servername}}.tar.gz"
     dest: "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}/{{zomboid_servername}}.tar.gz"
 
 - name: Extract zomboid save file
-  become: yes
-  become_method: su
-  become_user: pzuser
   command: "tar -zxf {{zomboid_servername}}.tar.gz"
   args:
     chdir: "{{zomboid_dir}}/Saves/Multiplayer/{{zomboid_servername}}"

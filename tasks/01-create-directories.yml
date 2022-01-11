@@ -1,15 +1,9 @@
 - name: Create ~/.local/bin
-  become: yes
-  become_method: su
-  become_user: pzuser
   file:
     path: "{{pzuser_home}}/.local/bin"
     state: directory
 
 - name: "Create Zomboid directories in {{pz_server_dir}}"
-  become: yes
-  become_method: su
-  become_user: pzuser
   file:
     path: "{{pz_server_dir}}{{item}}"
     state: directory
@@ -31,9 +25,6 @@
     binary_files_list: "{{ binary_templates_list | map(attribute='to') }}"
 
 - name: Setting server binaries from templates
-  become: yes
-  become_method: su
-  become_user: pzuser
   template:
     src: "{{ item.from }}"
     dest: "{{pz_server_dir}}/bin/{{ item.to }}"
@@ -44,9 +35,6 @@
   with_items: "{{ binary_files_list }}"
 
 - name: Create server binary files symbolic links to ~/.local/bin
-  become: yes
-  become_method: su
-  become_user: pzuser
   file:
     src: "{{pz_server_dir}}/bin/{{item}}"
     dest: "{{pzuser_bin_dir}}/{{item}}"
@@ -54,9 +42,6 @@
   with_items: "{{ binary_files_list }}"
 
 - name: Set script to run on startup
-  become: yes
-  become_method: su
-  become_user: pzuser
   ansible.builtin.cron:
     name: "PZ startup script"
     special_time: reboot

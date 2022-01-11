@@ -2,6 +2,11 @@
 
 - name: Set up PZ server
   hosts: pzserver
+
+  become: yes
+  become_method: su
+  become_user: pzuser
+
   gather_facts: no
 
   vars_files:

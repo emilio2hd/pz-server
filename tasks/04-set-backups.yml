@@ -1,11 +1,9 @@
 - name: Install restic backup tool
+  become: no
   apt:
     name: 'restic'
 
 - name: Create restic-env
-  become: yes
-  become_method: su
-  become_user: pzuser
   ansible.builtin.copy:
     dest: "{{ pz_server_dir }}/backups/restic-env"
     content: |
@@ -13,9 +11,6 @@
       export RESTIC_PASSWORD="{{pzserver_backup_repo_password}}"
 
 - name: Check if backup repository is already initialized
-  become: yes
-  become_method: su
-  become_user: pzuser
   register: check_backup_repo
   shell: |
     source {{ pz_server_dir }}/backups/restic-env
@@ -28,9 +23,6 @@
     executable: /bin/bash
 
 - name: Initialize backup repository
-  become: yes
-  become_method: su
-  become_user: pzuser
   shell: "source {{ pz_server_dir }}/backups/restic-env && /usr/bin/restic init"
   args:
     executable: /bin/bash
@@ -44,7 +36,4 @@
       state: present
 
 - name: Set recurrent backup
-  become: yes
-  become_method: su
-  become_user: pzuser
   cron: "{{ default_cron_params|combine(backup_cron_settings) }}"
