@@ -4,6 +4,11 @@ zomboid_servername: "servertest"
 # zomboid_server_password: "somepass" # Uncomment or add this variable to config.yml file to set a server password
 zomboid_server_admin_password: "somepass"
 
+# RCon
+zomboid_rcon_port: 27015
+# Zomboid server requires a password in order to start RCON server. Make sure to uncomment and set some password.
+# zomboid_rcon_password:
+
 pzserver_backup_repo_password: "somepass"
 backup_cron_settings:
   minute: "0"

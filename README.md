@@ -13,6 +13,7 @@ The playbook will:
 - Create a `/home/pzuser/.local/bin`, with binaries to start, stop, backup and run the server on startup.
 - Create a backup repository `/home/pzuser/pz-server/backups/repository` using [restic](https://restic.readthedocs.io/en/stable/)
 and a cron task to backup the folders `Zomboid/Server`, `Zomboid/db`, `Zomboid/Saves/Multiplayer/<server name>`.
+- Allow you to set a server password.
 
 # Before running the playbook
 Before running this playbook, it's required a few things.
@@ -75,6 +76,7 @@ sudo ufw allow 53         # Authorize DNS
 sudo ufw allow 8766/udp
 sudo ufw allow 8767/udp
 sudo ufw allow 16261/udp
+sudo ufw allow 27015/tcp        # In order to enable access to RCON Server
 
 # TCP ports will have to be opened for each player slot on the server.
 sudo ufw allow 16262:16272/tcp    # Server with 10 player slots
@@ -122,12 +124,15 @@ Server Steam ID <bunch of numbers>
 ##########
 ```
 In order to exit screen without killing the server type: `ctrl + a` followed by `ctrl + d`.
-Try to not to kill the server, it lead to not saving the world properly and you losing your stuff. Always use as `pzuser`:
+Try to not to kill the server, it could not save the world properly and you losing your stuff.
+
+Always use, as `pzuser`:
 ```
 source .profile
 stop-zomboid
 ```
-You should be good to connect to the server following the instruction here [Connecting to the Server](https://pzwiki.net/wiki/Dedicated_Server#Connecting_to_the_Server).
+
+Once the server is running, you should be good to connect to the server following the instruction here [Connecting to the Server](https://pzwiki.net/wiki/Dedicated_Server#Connecting_to_the_Server).
 
 # Migrating your save
 This step is if you have a dedicated server and want to move the files to the new one.
@@ -173,6 +178,21 @@ ansible-playbook site.yml --tags "migrate-files"
 
 Run the server again and create the user with the same name as the old server and you should get the world and the characters in the new server.
 
+## Server password
+
+To protect your server, I would recommend enabling the password.
+In the `config.yml`, uncomment the `zomboid_server_password`, set some password and run:
+```
+ansible-playbook site.yml --tags "server-pwd"
+```
+
+## Enable RCON
+
+Zomboid server allows remote connection. In order to do this, it's required to set a password to the rcon server.
+In the `config.yml`, uncomment the `zomboid_rcon_password`, set some password and run:
+```
+ansible-playbook site.yml --tags "server-rcon"
+```
 
 Have fun!
 

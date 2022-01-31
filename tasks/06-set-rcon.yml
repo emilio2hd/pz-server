@@ -1,0 +1,11 @@
+- name: Insert/Update pzserver RCONPort
+  ansible.builtin.lineinfile:
+    path: "{{zomboid_dir}}/Server/{{zomboid_servername}}.ini"
+    regexp: '^RCONPort='
+    line: "RCONPort={{zomboid_rcon_port}}"
+
+- name: Insert/Update pzserver RCONPassword
+  ansible.builtin.lineinfile:
+    path: "{{zomboid_dir}}/Server/{{zomboid_servername}}.ini"
+    regexp: '^RCONPassword='
+    line: "RCONPassword={{zomboid_rcon_password}}"

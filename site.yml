@@ -37,3 +37,6 @@
     - include: tasks/05-set-server-password.yml
       when: zomboid_server_password is defined
       tags: [ server-pwd ]
+    - include: tasks/06-set-rcon.yml
+      when: zomboid_rcon_password is defined
+      tags: [ server-rcon ]
